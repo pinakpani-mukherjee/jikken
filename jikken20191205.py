@@ -11,11 +11,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 plt.style.use("ggplot")
-L = 0.005
-C = 0.1e-6
+L = 0.004949
+C = 0.00000010054
 R = 100.0
-Rs = 45#55,65
-Rm = 2*math.sqrt(L/C)
+Rs = 55
+Rm = 443.73
 Rl = 1000.0
 rl = 0
 
@@ -301,7 +301,7 @@ def find_I_X(f,r,c,i):
     #imag = (-r*((2*math.pi*f*L)-(1/(2*math.pi*f*C))))/(r**2 + ((2*math.pi*f*L)-(1/(2*math.pi*f*C)))**2)
     temp_a_r = r/math.sqrt((r**2) + ((2*math.pi*f*L)-(1/(2*math.pi*f*C)))**2 )
     temp_an = ((2*math.pi*f*L)-(1/(2*math.pi*f*C)))/r
-    temp_angle = math.degrees(math.atan(temp_an))
+    temp_angle = -math.degrees(math.atan(temp_an))
     
     
     return temp_a_r,temp_angle
@@ -379,11 +379,22 @@ plt.title("Admittance ratios")
 plt.legend()
 plt.show()
 
+
+f_c = [ 200,300,500,700,1000,2000,2500,3000,3500,4000,4500,5000,5500,6000,6500
+       ,7000,7186,7500,8000,8500,9000,10000,15000,20000,30000,40000,50000,
+       70000,100000,150000]
+
+theta_c= [82.79366903,79.25037949,72.38980708,65.93944603,57.20352173,36.10363196
+          ,29.05049817,23.47919242,18.95512994,15.1826246,11.96117211,9.152993193
+          ,6.661579786,4.417931621,2.371721217,0.4855496786,-0.1811988199,-1.268853982,
+         -2.913195864,-4.464378645,-5.935734423,-8.679464492,-19.84445474,-28.49132266,
+            -41.35093554,-50.2938861,-56.71311531,-65.09750115,-72.08731932,-77.87271455]
 #plt.plot(df_2_45["frequency"],df_2_45["theta"],color="blue",label = "R_45")
-plt.plot(df_2_55["frequency"],df_2_55["theta"],color="red",label = "R_55")
+#plt.plot(df_2_55["frequency"],df_2_55["theta"],color="red",label = "R_55")
 #plt.plot(df_2_65["frequency"],df_2_65["theta"],color="green",label = "R_65")
-plt.plot(df_2_447["frequency"],df_2_447["theta"],color="purple",label = "R_cri")
-plt.plot(df_2_1000["frequency"],df_2_1000["theta"],color="brown",label = "R_1000")
+#plt.plot(df_2_447["frequency"],df_2_447["theta"],color="purple",label = "R_cri")
+plt.plot(f_c,theta_c,color="black",linestyle= "--",marker= "^",label = "R_1000 Calculated")
+plt.plot(df_2_1000["frequency"],df_2_1000["theta"],color="brown",label = "R_1000 Theoretical")
 
 
 plt.xscale("log")
@@ -395,37 +406,19 @@ plt.show()
 
 
 
+a_val = [-1.464311485,-0.2117687233,0.8680900376,1.832826131]
+V_r = [0.6462142914,0.9934909694,0.7786215045,0.5230930348]
+V_r_cos_real = [0.4175929104,0.9870243062,0.6062514473,0.273626323]
+V_r_sin_imag = [0.4931623177,0.1131694534,-0.4885802185,-0.4458194235]
 
 
 
 
+plt.plot(a_val,V_r,color='blue',linestyle="--",marker='^',label="admittance")
+plt.plot(a_val,V_r_cos_real,color='red',linestyle="--",marker='s',label="conductance")
+plt.plot(a_val,V_r_sin_imag,color='green',linestyle="--",marker='o',label='succeptance')
+plt.xlabel("Relative Detuning Values[a]")
+plt.ylabel("Admittance ratio")
 
-
-fig, ax1 = plt.subplots()
-
-color = 'tab:red'
-ax1.set_xlabel('Frequency[Hz]')
-ax1.set_ylabel('Transfer Function Amplitude[dB]', color=color)
-ax1.plot(x, y_g, color=color)
-ax1.tick_params(axis='y', labelcolor=color)
-
-ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
-
-color = 'tab:blue'
-ax2.set_ylabel('Transfer Function Phase Angle[deg]', color=color)  # we already handled the x-label with ax1
-ax2.plot(x, y_theta, color=color,linestyle = "--")
-ax2.tick_params(axis='y', labelcolor=color)
-
-fig.tight_layout()  # otherwise the right y-label is slightly clipped
-plt.xscale("log")
-plt.title("Resonance curve of an RLC circuit")
+plt.legend()
 plt.show()
-
-
-
-
-
-f = 1/(2*math.pi*math.sqrt(L*C))
-
-Q = math.sqrt(L)/(1000*math.sqrt(C))
-print(Q)
